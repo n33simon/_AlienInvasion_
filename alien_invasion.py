@@ -73,19 +73,30 @@ class AlienInvasion:
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets."""
-        #Update bullet positions.
+        # Update bullet positions.
         self.bullets.update()
 
-        #Get rid of bullets that have disappeared.
+        # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
-        #Make an alien.
+        #Create an alien and find the number of aliens in a row.
+        #Space between eac alien is equal to one alien width.
         alien = Alien(self)
-        self.aliens.add(alien)
+        alien_width = alien.rect.width
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        #Create the first row of aliens
+        for alien_number in range(number_aliens_x):
+            #Create an alien and place it in the row.
+            alien = Alien(self)
+            alien.x =  alien_width + 2 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
@@ -95,6 +106,7 @@ class AlienInvasion:
         self.aliens.draw(self.screen)
 
         pygame.display.flip()
+
 
 if __name__ == "__main__":
     # Make a game instance, and run the game.
